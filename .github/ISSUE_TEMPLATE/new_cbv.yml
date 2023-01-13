@@ -127,6 +127,15 @@ body:
       label: Aditional comments
       description: Share any additional thought that you have about this vulnerability
       placeholder: Go nuts here
+  # credits
+  - type: input
+    id: credits
+    attributes:
+      label: Credit to
+      description: Enter your name, email, Github user, organization name, etc
+      placeholder:  '@BMogetta'
+    validations:
+      required: true
   #
   - type: checkboxes
     id: terms
