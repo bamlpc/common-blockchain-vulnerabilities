@@ -1,9 +1,9 @@
-import { KeyStack  } from "https://deno.land/std@0.170.0/crypto/mod.ts";
+import { KeyStack } from "https://deno.land/std@0.170.0/crypto/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.171.0/fs/mod.ts";
 
 main()
 async function main() {
-  
+
   const data_given_by_gh: Array<string> = Deno.args;
   /*
   * First argument is going to be an array containing the labels
@@ -24,24 +24,28 @@ async function main() {
   // BODY
   const issue_body = data_given_by_gh[1];
   const raw_form_data = issue_body;
-  
+
   // KEYS
   const keyStack = new KeyStack([data_given_by_gh[2]]);
   const digest = await keyStack.sign(data_given_by_gh[3]);
   const api_key = digest;
-  
+
   // END POINT
   const api_endpoint = data_given_by_gh[4];
-  
 
-  // create a new cbv
+
+  // create a new cbv code
   const new_cbv_code_name = await get_new_cbv_code_name ();
   // extract informatio from form string into an object
   const brokedown_form = breakdown_form(raw_form_data, new_cbv_code_name, api_key);
   // create a beautiful .md file to be store in issues
   const cbv_ready_to_be_stored = prettify(brokedown_form)
+
+  // create new cbv filename
+
+  const cbv_file_name = `[${new_cbv_code_name}] ${brokedown_form.title}`
   // Store the new CBV in Issues folder TODO: check if multiples bc gives back string or array
-  await store_new_cbv_in_folder(new_cbv_code_name, cbv_ready_to_be_stored, brokedown_form);
+  await store_new_cbv_in_folder(cbv_file_name, cbv_ready_to_be_stored, brokedown_form);
 
   await store_new_cbv_in_db(brokedown_form, api_endpoint);
 
@@ -55,14 +59,14 @@ async function main() {
 
 async function get_new_cbv_code_name (): Promise<string> {
 
-  const currentPath = `${Deno.cwd()}/issues`  
+  const currentPath = `${Deno.cwd()}/issues`
   const list_of_all_md = await get_file_names(currentPath)
 
   let last_cbv_added = 0
 
   list_of_all_md.flat(2).forEach(file_name => {
     const current_file_number = Number(file_name.replace(/\D/g,''));
-    if (current_file_number > last_cbv_added) last_cbv_added = current_file_number;
+    if (current_file_number > 0) last_cbv_added = current_file_number;
   });
 
   // name the next file, allways replace with current year
@@ -122,9 +126,9 @@ function breakdown_form ( issue_form: string, new_cbv_code_name: string, _api_ke
 function prettify (form_object: CBV): string {
 
   const formated_cbv_as_md = `# ${form_object.title}
-  
+
 ${form_object.short_description}
-  
+
 ### CBV:ID ${form_object.cbv_id}
 ### Blockchain: ${form_object.blockchain}
 ### Version affected: ${form_object.version_affected}
@@ -189,15 +193,15 @@ async function store_new_cbv_in_folder(_new_cbv_code_name: string, _cbv_ready_to
   const get_subfolders: Array<string> = _cbv_obj.blockchain.split(", ")
   // create any blockchain folder that doesn't exist
   for await (const subfolder of get_subfolders) {
-    const path = `${Deno.cwd()}/issues/${subfolder}`
-    ensureDir(path);
+    const folder_path = `${Deno.cwd()}/issues/${subfolder}`
+    ensureDir(folder_path);
   }
   // store CBV in all it's corresponding directories
   for await (const subfolder of get_subfolders) {
-    const path = `${Deno.cwd()}/issues/${subfolder}`
-    await Deno.writeTextFile(`${path}/${_new_cbv_code_name}.md`, _cbv_ready_to_be_stored);
+    const sub_folder_path = `${Deno.cwd()}/issues/${subfolder}`
+    await Deno.writeTextFile(`${sub_folder_path}/${_new_cbv_code_name}.md`, _cbv_ready_to_be_stored);
   }
-  
+
 }
 
 async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promise<void> {
