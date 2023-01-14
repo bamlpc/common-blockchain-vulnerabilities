@@ -192,7 +192,8 @@ function getCurrentDate() {
 }
 
 async function store_new_cbv_in_folder(_new_cbv_code_name: string, _cbv_ready_to_be_stored: string, _cbv_obj: CBV) {
-  const get_subfolders: Array<string> = _cbv_obj.blockchain.split(", ")
+  const get_subfolders: Array<string> = _cbv_obj.blockchain.split(", ") || [_cbv_obj.blockchain]
+  
   // create any blockchain folder that doesn't exist
   for await (const subfolder of get_subfolders) {
     const folder_path = `${Deno.cwd()}/issues/${subfolder}`
