@@ -234,7 +234,7 @@ async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promi
     }
 `
   try {
-    const response = const post = await fetch(url,{
+    const response = await fetch(url,{
       method: "POST",
       headers: {
         "Content-Type": "application/json",
