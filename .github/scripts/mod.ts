@@ -214,7 +214,7 @@ async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promi
     const stringify = JSON.stringify(response)
     await Deno.writeTextFile(`${Deno.cwd()}/save_file_response_json.txt`, response);
     await Deno.writeTextFile(`${Deno.cwd()}/save_file_response_string.txt`, stringify);
-    if (stringify.includes(`{"errors":[{"message"`)) {
+    if (stringify.match(/errors/)) {
       new Error(stringify)
     }
     if ( response.errors[0].message) {
