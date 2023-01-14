@@ -212,7 +212,8 @@ async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promi
     })
     .then(response => response.json())
     .then(data => {
-      if (Object.hasOwn(data, 'errors')) throw Error(data.errors.message)
+      const stringify = JSON.stringify(data)
+      if (stringify.includes(`"message":"Unauthorized"`)) new Error("Unauthorized")
     })
   } catch (error) {
     throw error
