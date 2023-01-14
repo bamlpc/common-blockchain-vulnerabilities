@@ -212,9 +212,13 @@ async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promi
     })
     .then(resp => resp.json())
     const stringify = JSON.stringify(response)
-    await Deno.writeTextFile(`${Deno.cwd()}/save_file_response.txt`, stringify);
+    await Deno.writeTextFile(`${Deno.cwd()}/save_file_response_json.txt`, response);
+    await Deno.writeTextFile(`${Deno.cwd()}/save_file_response_string.txt`, stringify);
     if (stringify.includes(`{"errors":[{"message"`)) {
       new Error(stringify)
+    }
+    if ( response && response.error) {
+      new Error('json error')
     }
   } catch (error) {
     throw error
