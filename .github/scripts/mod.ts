@@ -210,6 +210,10 @@ async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promi
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify( {mutation: `store_cbv: cbv: ${_obj_data}`} )
     })
+    .then(response => response.json())
+    .then(data => {
+      if (Object.hasOwn(data, 'errors')) throw new Error(data.errors.message)
+    })
   } catch (error) {
     throw error
   }
