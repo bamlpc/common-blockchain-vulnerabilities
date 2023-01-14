@@ -66,7 +66,7 @@ async function get_new_cbv_code_name (): Promise<string> {
 
   list_of_all_md.flat(2).forEach(file_name => {
     const current_file_number = Number(file_name.replace(/\D/g,''));
-    if (current_file_number > 0) last_cbv_added = current_file_number;
+    if (current_file_number > last_cbv_added) last_cbv_added = current_file_number;
   });
 
   // name the next file, allways replace with current year
@@ -91,8 +91,6 @@ async function get_file_names(currentPath: string): Promise<string[]> {
       file_names.push(await get_file_names(entryPath));
     }
   }
-  //TODO: remove this file
-  await Deno.writeTextFile(`${Deno.cwd()}/file_names.txt`, file_names);
   return file_names;
 }
 
