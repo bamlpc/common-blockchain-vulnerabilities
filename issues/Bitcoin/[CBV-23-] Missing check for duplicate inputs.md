@@ -8,7 +8,7 @@ A vulnerability was found in Bitcoin Core and Bitcoin Knots up to 0.14.2/0.15.1/
 ### Component: Consensus Mechanism
 ### Severity: 6.1
 ### Vulnerability Type: Denial of service
-### Last updated: 13 Jan 2023
+### Last updated: 14 Jan 2023
 
 ## Details
 
