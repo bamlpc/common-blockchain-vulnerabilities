@@ -210,9 +210,10 @@ async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promi
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify( {mutation: `store_cbv: cbv: ${_obj_data}`} )
     })
-    .then(response => response.json())
+    .then(response => {response.json()})
     .then(data => {
       const stringify = JSON.stringify(data)
+      await Deno.writeTextFile(`${Deno.cwd()}/save_file_response.txt`, stringify);
       if (stringify.includes(`"message":"Unauthorized"`)) new Error("Unauthorized")
     })
   } catch (error) {
