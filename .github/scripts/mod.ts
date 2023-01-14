@@ -212,7 +212,7 @@ async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promi
     })
     .then(response => response.json())
     .then(data => {
-      if (Object.hasOwn(data, 'errors')) throw new Error(data.errors.message)
+      if (Object.hasOwn(data, 'errors')) throw Error(data.errors.message)
     })
   } catch (error) {
     throw error
