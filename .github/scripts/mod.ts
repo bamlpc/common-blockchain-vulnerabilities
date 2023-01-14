@@ -205,17 +205,16 @@ async function store_new_cbv_in_folder(_new_cbv_code_name: string, _cbv_ready_to
 
 async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promise<void> {
   try {
-    await fetch(_api_endpoint, {
+    const response = await fetch(_api_endpoint, {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify( {mutation: `store_cbv: cbv: ${_obj_data}`} )
     })
-    .then(response => {response.json()})
-    .then(async (data) => {
-      const stringify = JSON.stringify(data)
-      await Deno.writeTextFile(`${Deno.cwd()}/save_file_response.txt`, stringify);
-      if (stringify.includes(`"message":"Unauthorized"`)) new Error("Unauthorized")
-    })
+    .then(resp => resp.json())
+    const stringify = JSON.stringify(response)
+    await Deno.writeTextFile(`${Deno.cwd()}/save_file_response.txt`, stringify);
+    if (stringify.includes(`"message":"Unauthorized"`)) new Error("Unauthorized")
+    }
   } catch (error) {
     throw error
   }
