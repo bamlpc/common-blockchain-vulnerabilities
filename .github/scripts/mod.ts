@@ -208,16 +208,16 @@ async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promi
     const response = await fetch(_api_endpoint, {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify( {mutation: `store_cbv: cbv: ${_obj_data}`} )
+      body: JSON.stringify( {mutation: `store_cbv{cbv: ${_obj_data}}`} )
     })
     .then(resp => resp.json())
     const stringify = JSON.stringify(response)
-    await Deno.writeTextFile(`${Deno.cwd()}/save_file_response_string.txt`, stringify);
     if (stringify.match(/errors/)) {
       throw new Error(stringify)
     }
   } catch (error) {
     console.log(error)
+    // make GH action fail when CBV cannot be save in DB
     Deno.exit(1);
   }
 }
