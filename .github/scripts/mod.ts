@@ -204,11 +204,13 @@ async function store_new_cbv_in_folder(_new_cbv_code_name: string, _cbv_ready_to
 }
 
 async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promise<void> {
-  // TODO:create a function to be sure that this value is stored.
-  await fetch(_api_endpoint, {
-    method: "POST",
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify( {mutation: `store_cbv: cbv: ${_obj_data}`} )
-  })
-  //idea, pasar dentro del object data, como un campo mas, la key hasheada, en el back end revisar que coincidan y guardar todo sin el key
+  try {
+    await fetch(_api_endpoint, {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify( {mutation: `store_cbv: cbv: ${_obj_data}`} )
+    })
+  } catch (error) {
+    throw error
+  }
 }
