@@ -91,7 +91,8 @@ async function get_file_names(currentPath: string): Promise<string[]> {
       file_names.push(await get_file_names(entryPath));
     }
   }
-
+  //TODO: remove this file
+  await Deno.writeTextFile(`${Deno.cwd()}/file_names.txt`, file_names);
   return file_names;
 }
 
