@@ -115,6 +115,7 @@ function breakdown_form ( issue_form: string, new_cbv_code_name: string, _api_ke
     labels: split[11].replace(/Labels/, "").trim(),
     tests: split[12].replace(/Test/, "").trim(),
     aditional_comments: split[13].replace(/Aditional comments/, "").trim(),
+    credits: split[14].replace(/Credit to/, "").trim(),
     created_at: now,
     updated_at: "",
     api_key: _api_key
@@ -134,6 +135,7 @@ ${form_object.short_description}
 ### Component: ${form_object.component}
 ### Severity: ${form_object.severity}
 ### Vulnerability Type: ${form_object.vulnerability_type}
+### Credits: ${form_object.credits}
 ### Last updated: ${form_object.created_at}
 
 ## Details
@@ -177,6 +179,7 @@ interface CBV {
   labels: string;
   tests: string;
   aditional_comments: string;
+  credits: string;
   created_at: string;
   updated_at: string;
   api_key: string;
@@ -204,13 +207,41 @@ async function store_new_cbv_in_folder(_new_cbv_code_name: string, _cbv_ready_to
 }
 
 async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promise<void> {
+  const mutation = `
+    mutation{
+    	store_cbv(
+        cbv: {
+    	  	title: ${_obj_data.title}
+          short_description: ${_obj_data.short_description}
+      		cbv_id: ${_obj_data.cbv_id}
+    	  	blockchain: ${_obj_data.blockchain}
+     			version_affected: ${_obj_data.version_affected}
+      		component: ${_obj_data.component}
+   		  	severity: "${_obj_data.severity}
+     			vulnerability_type: ${_obj_data.vulnerability_type}
+      		details: ${_obj_data.details}
+    	  	recommendation: ${_obj_data.recommendation}
+      		references: ${_obj_data.references}
+      		labels: ${_obj_data.labels}
+    	  	tests: ${_obj_data.tests}
+          aditional_comments: ${_obj_data.aditional_comments}
+          credits: ${_obj_data.credits}
+          created_at: ${_obj_data.created_at}
+          updated_at: ${_obj_data.updated_at}
+          api_key: ${_obj_data.api_key}
+		    }
+      )
+    }
+`
   try {
-    const response = await fetch(_api_endpoint, {
+    const response = const post = await fetch(url,{
       method: "POST",
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify( {mutation: `store_cbv { cbv ${_obj_data}}`} )
-    })
-    .then(resp => resp.json())
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: JSON.stringify({mutation})
+    }).then(response => response.json())
     const stringify = JSON.stringify(response)
     if (stringify.match(/errors/)) {
       throw new Error(stringify)
