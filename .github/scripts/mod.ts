@@ -217,7 +217,7 @@ async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promi
     if (stringify.includes(`{"errors":[{"message"`)) {
       new Error(stringify)
     }
-    if ( response && response.error) {
+    if ( response.errors[0].message) {
       new Error('json error')
     }
   } catch (error) {
