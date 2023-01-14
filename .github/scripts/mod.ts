@@ -213,8 +213,8 @@ async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promi
     .then(resp => resp.json())
     const stringify = JSON.stringify(response)
     await Deno.writeTextFile(`${Deno.cwd()}/save_file_response.txt`, stringify);
-    if (stringify.includes(`"message":"Unauthorized"`)) {
-      new Error("Unauthorized")
+    if (stringify.includes(`{"errors":[{"message"`)) {
+      new Error(stringify)
     }
   } catch (error) {
     throw error
