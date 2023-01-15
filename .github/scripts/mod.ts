@@ -1,25 +1,29 @@
 import { KeyStack } from "https://deno.land/std@0.170.0/crypto/mod.ts";
-import { ensureDir } from "https://deno.land/std@0.171.0/fs/mod.ts";
 
-main()
+import { prettify } from "./src/prettify.ts";
+import { store_new_cbv_in_folder } from "./src/store_new_cbv_in_folder.ts";
+import { store_new_cbv_in_db } from "./src/store_new_cbv_in_db.ts";
+import { get_new_cbv_code_name } from "./src/get_new_cbv_code_name.ts";
+import { breakdown_form } from "./src/breakdown_form.ts";
+
+main();
 async function main() {
-
   const data_given_by_gh: Array<string> = Deno.args;
   /*
-  * First argument is going to be an array containing the labels
-  * Second argument is going to be an object containing the new CBV to be added
-  * Third argument is the API v1 GraphQL endpoint to store the CBV
-  * Forth argument is going to be the first Key to validate the store endpoint
-  * Fifth argument is going to be the second Key to validate the store endpoint
-  */
+   * First argument is going to be an array containing the labels
+   * Second argument is going to be an object containing the new CBV to be added
+   * Third argument is the API v1 GraphQL endpoint to store the CBV
+   * Forth argument is going to be the first Key to validate the store endpoint
+   * Fifth argument is going to be the second Key to validate the store endpoint
+   */
 
   // LABELS
   const issue_labels = data_given_by_gh[0];
   const is_accepted = issue_labels.match(/Accepted/);
   if (!is_accepted) {
     // Because this exit here, no changes are made, and no code is ever pushed
-    console.log(data_given_by_gh)
-    Deno.exit(0)
+    console.log(data_given_by_gh);
+    Deno.exit(0);
   }
   // BODY
   const issue_body = data_given_by_gh[1];
@@ -33,223 +37,32 @@ async function main() {
   // END POINT
   const api_endpoint = data_given_by_gh[4];
 
-
   // create a new cbv code
-  const new_cbv_code_name = await get_new_cbv_code_name ();
+  const new_cbv_code_name = await get_new_cbv_code_name();
   // extract informatio from form string into an object
-  const brokedown_form = breakdown_form(raw_form_data, new_cbv_code_name, api_key);
+  const brokedown_form = breakdown_form(
+    raw_form_data,
+    new_cbv_code_name,
+    api_key,
+  );
   // create a beautiful .md file to be store in issues
-  const cbv_ready_to_be_stored = prettify(brokedown_form)
+  const cbv_ready_to_be_stored = prettify(brokedown_form);
 
   // create new cbv filename
 
-  const cbv_file_name = `[${new_cbv_code_name}] ${brokedown_form.title}`
+  const cbv_file_name = `[${new_cbv_code_name}] ${brokedown_form.title}`;
   // Store the new CBV in Issues folder TODO: check if multiples bc gives back string or array
-  await store_new_cbv_in_folder(cbv_file_name, cbv_ready_to_be_stored, brokedown_form);
+  await store_new_cbv_in_folder(
+    cbv_file_name,
+    cbv_ready_to_be_stored,
+    brokedown_form,
+  );
 
   await store_new_cbv_in_db(brokedown_form, api_endpoint);
 
   /*
-  * Log the CBV code to grab it in github actions
-  */
-  console.log(new_cbv_code_name)
-  return new_cbv_code_name
-}
-
-
-async function get_new_cbv_code_name (): Promise<string> {
-
-  const currentPath = `${Deno.cwd()}/issues`
-  const list_of_all_md = await get_file_names(currentPath)
-
-  let last_cbv_added = 0
-
-  list_of_all_md.flat(2).forEach(file_name => {
-    const current_file_number = Number(file_name.replace(/\D/g,''));
-    if (current_file_number > last_cbv_added) last_cbv_added = current_file_number;
-  });
-
-  // name the next file, allways replace with current year
-  const new_cbv_number = (last_cbv_added + 1).toString().slice(2);
-  const current_year = (new Date()).getFullYear() - 2000
-  const new_cbv_name = `CBV-${current_year}-${new_cbv_number}`
-  return new_cbv_name
-}
-
-/*
-* Recursive function to get all files in issues folder
-*/
-
-async function get_file_names(currentPath: string): Promise<string[]> {
-  const file_names: string[] = [];
-
-  for await (const dirEntry of Deno.readDir(currentPath)) {
-    const entryPath = `${currentPath}/${dirEntry.name}`;
-    file_names.push(entryPath);
-
-    if (dirEntry.isDirectory) { //Deno lint can't process this recursion.. code worked fine.
-      file_names.push(await get_file_names(entryPath));
-    }
-  }
-  return file_names;
-}
-
-/*
-* Recieve issues form from github and output an object
-*/
-function breakdown_form ( issue_form: string, new_cbv_code_name: string, _api_key: string ): CBV{
-  const now = getCurrentDate();
-  const split = issue_form.split('###')
-  const form_object = {
-    title: split[1].replace(/Title/, "").trim(),
-    short_description: split[2].replace(/Short description/, "").trim(),
-    cbv_id: new_cbv_code_name,
-    blockchain: split[3].replace(/Blockchain/, "").trim(),
-    version_affected: split[4].replace(/Version affected/, "").trim(),
-    component: split[5].replace(/Component/, "").trim(),
-    severity: split[6].replace(/Severity/, "").trim(),
-    vulnerability_type: split[7].replace(/Vulnerability Type/, "").trim(),
-    details: split[8].replace(/Details/, "").trim(),
-    recommendation: split[9].replace(/Recommendation/, "").trim(),
-    references: split[10].replace(/References/, "").trim(),
-    labels: split[11].replace(/Labels/, "").trim(),
-    tests: split[12].replace(/Test/, "").trim(),
-    aditional_comments: split[13].replace(/Aditional comments/, "").trim(),
-    credits: split[14].replace(/Credit to/, "").trim(),
-    created_at: now,
-    updated_at: "",
-    api_key: _api_key
-  }
-  return form_object
-}
-
-function prettify (form_object: CBV): string {
-
-  const formated_cbv_as_md = `# ${form_object.title}
-
-${form_object.short_description}
-
-### CBV:ID ${form_object.cbv_id}
-### Blockchain: ${form_object.blockchain}
-### Version affected: ${form_object.version_affected}
-### Component: ${form_object.component}
-### Severity: ${form_object.severity}
-### Vulnerability Type: ${form_object.vulnerability_type}
-### Credits: ${form_object.credits}
-### Last updated: ${form_object.created_at}
-
-## Details
-
-${form_object.details}
-
-## Recomendations
-
-${form_object.recommendation}
-
-## References
-
-${form_object.references}
-
-### Labels: ${form_object.labels}
-
-## Test
-
-${form_object.tests}
-
-## Aditional comments
-
-${form_object.aditional_comments}
-`
-
-  return formated_cbv_as_md.replace(/_No response_/g, "-")
-}
-
-interface CBV {
-  title: string;
-  short_description: string;
-  cbv_id: string;
-  blockchain: string;
-  version_affected: string;
-  component: string;
-  severity: string;
-  vulnerability_type: string;
-  details: string;
-  recommendation: string;
-  references: string;
-  labels: string;
-  tests: string;
-  aditional_comments: string;
-  credits: string;
-  created_at: string;
-  updated_at: string;
-  api_key: string;
-}
-
-function getCurrentDate() {
-  const timeStamp = new Date().toUTCString().split(" ");
-  const date = `${timeStamp[1]} ${timeStamp[2]} ${timeStamp[3]}`;
-  return date;
-}
-
-async function store_new_cbv_in_folder(_new_cbv_code_name: string, _cbv_ready_to_be_stored: string, _cbv_obj: CBV) {
-  const get_subfolders: Array<string> = _cbv_obj.blockchain.split(", ") || [_cbv_obj.blockchain]
-  
-  // create any blockchain folder that doesn't exist
-  for await (const subfolder of get_subfolders) {
-    const folder_path = `${Deno.cwd()}/issues/${subfolder}`
-    ensureDir(folder_path);
-  }
-  // store CBV in all it's corresponding directories
-  for await (const subfolder of get_subfolders) {
-    const sub_folder_path = `${Deno.cwd()}/issues/${subfolder}`
-    await Deno.writeTextFile(`${sub_folder_path}/${_new_cbv_code_name}.md`, _cbv_ready_to_be_stored);
-  }
-
-}
-
-async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promise<void> {
-  const mutation = `
-    mutation{
-    	store_cbv(
-        cbv: {
-    	  	title: ${_obj_data.title}
-          short_description: ${_obj_data.short_description}
-      		cbv_id: ${_obj_data.cbv_id}
-    	  	blockchain: ${_obj_data.blockchain}
-     			version_affected: ${_obj_data.version_affected}
-      		component: ${_obj_data.component}
-   		  	severity: "${_obj_data.severity}
-     			vulnerability_type: ${_obj_data.vulnerability_type}
-      		details: ${_obj_data.details}
-    	  	recommendation: ${_obj_data.recommendation}
-      		references: ${_obj_data.references}
-      		labels: ${_obj_data.labels}
-    	  	tests: ${_obj_data.tests}
-          aditional_comments: ${_obj_data.aditional_comments}
-          credits: ${_obj_data.credits}
-          created_at: ${_obj_data.created_at}
-          updated_at: ${_obj_data.updated_at}
-          api_key: ${_obj_data.api_key}
-		    }
-      )
-    }
-`
-  try {
-    const response = await fetch(url,{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-      body: JSON.stringify({mutation})
-    }).then(response => response.json())
-    const stringify = JSON.stringify(response)
-    if (stringify.match(/errors/)) {
-      throw new Error(stringify)
-    }
-  } catch (error) {
-    console.log(error)
-    // make GH action fail when CBV cannot be save in DB
-    Deno.exit(1);
-  }
+   * Log the CBV code to grab it in github actions
+   */
+  console.log(new_cbv_code_name);
+  return new_cbv_code_name;
 }
