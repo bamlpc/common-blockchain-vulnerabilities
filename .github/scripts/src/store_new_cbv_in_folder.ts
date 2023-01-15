@@ -7,7 +7,7 @@ async function store_new_cbv_in_folder(
 	_cbv_obj: CBV,
 ) {
 	const get_subfolders: Array<string> = _cbv_obj.blockchain.split(', ');
-	
+
 	// create any blockchain folder that doesn't exist
 	for await (const subfolder of get_subfolders) {
 		const folder_path = `${Deno.cwd()}/issues/${subfolder}`;

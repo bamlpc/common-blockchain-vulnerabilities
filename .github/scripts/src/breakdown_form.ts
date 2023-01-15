@@ -9,6 +9,7 @@ function breakdown_form(
 ): CBV {
 	const now = getCurrentDate();
 	const split = issue_form.split('###');
+
 	const form_object = {
 		title: split[1].replace(/Title/, '').trim(),
 		short_description: split[2].replace(/Short description/, '').trim(),

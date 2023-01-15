@@ -1,8 +1,10 @@
 async function get_new_cbv_code_name(): Promise<string> {
 	const currentPath = `${Deno.cwd()}/issues`;
 	const list_of_all_md = await get_file_names(currentPath);
+	console.log(list_of_all_md);
 
-	let last_cbv_added = 0;
+	// proyect started on december 2022
+	let last_cbv_added = 2300000;
 
 	list_of_all_md.flat(2).forEach((file_name) => {
 		const current_file_number = Number(file_name.replace(/\D/g, ''));

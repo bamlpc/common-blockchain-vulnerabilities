@@ -51,7 +51,7 @@ async function main() {
 	// create new cbv filename
 
 	const cbv_file_name = `[${new_cbv_code_name}] ${brokedown_form.title}`;
-	// Store the new CBV in Issues folder TODO: check if multiples bc gives back string or array
+	// Store the new CBV in Issues folder
 	await store_new_cbv_in_folder(
 		cbv_file_name,
 		cbv_ready_to_be_stored,
