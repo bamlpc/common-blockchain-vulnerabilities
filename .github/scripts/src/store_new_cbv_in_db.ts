@@ -1,10 +1,10 @@
-import { CBV } from "./schemas.ts";
+import { CBV } from './schemas.ts';
 
 async function store_new_cbv_in_db(
-  _obj_data: CBV,
-  _api_endpoint: string,
+	_obj_data: CBV,
+	_api_endpoint: string,
 ): Promise<void> {
-  const mutation = `
+	const mutation = `
     mutation{
     	store_cbv(
         cbv: {
@@ -30,24 +30,24 @@ async function store_new_cbv_in_db(
       )
     }
 `;
-  try {
-    const response = await fetch(_api_endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-      body: JSON.stringify({ mutation }),
-    }).then((response) => response.json());
-    const stringify = JSON.stringify(response);
-    if (stringify.match(/errors/)) {
-      throw new Error(stringify);
-    }
-  } catch (error) {
-    console.log(error);
-    // make GH action fail when CBV cannot be save in DB
-    Deno.exit(1);
-  }
+	try {
+		const response = await fetch(_api_endpoint, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'Accept': 'application/json',
+			},
+			body: JSON.stringify({ mutation }),
+		}).then((response) => response.json());
+		const stringify = JSON.stringify(response);
+		if (stringify.match(/errors/)) {
+			throw new Error(stringify);
+		}
+	} catch (error) {
+		console.log(error);
+		// make GH action fail when CBV cannot be save in DB
+		Deno.exit(1);
+	}
 }
 
 export { store_new_cbv_in_db };

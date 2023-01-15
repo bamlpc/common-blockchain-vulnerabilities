@@ -1,7 +1,7 @@
-import { CBV } from "./schemas.ts";
+import { CBV } from './schemas.ts';
 
 function prettify(form_object: CBV): string {
-  const formated_cbv_as_md = `# ${form_object.title}
+	const formated_cbv_as_md = `# ${form_object.title}
 
 ${form_object.short_description}
 
@@ -37,7 +37,7 @@ ${form_object.tests}
 ${form_object.aditional_comments}
 `;
 
-  return formated_cbv_as_md.replace(/_No response_/g, "-");
+	return formated_cbv_as_md.replace(/_No response_/g, '-');
 }
 
 export { prettify };
