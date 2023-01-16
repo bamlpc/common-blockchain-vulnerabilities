@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-
-# https://gist.github.com/vncsna/64825d5609c146e80de8b1fd623011ca
-set -euo pipefail
-
-# Input
-GITHUB_COMMIT_NAME=${1?Error: Commit name required}
+{ IFS= read -rd '' value <DENO_OUTPUT.txt;} 2>/dev/null
+printf '%s' "$value"
 
 git config --local user.email "action@github.com"
 git config --local user.name "Github Action"
 git add -A
-git diff-index --quiet HEAD || (git commit -a -m "docs: Added [$GITHUB_COMMIT_NAME]" --allow-empty)
+git diff-index --quiet HEAD || (git commit -a -m "docs: Added $value" --allow-empty)
