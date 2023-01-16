@@ -2,8 +2,10 @@
 { IFS= read -rd '' value <DENO_OUTPUT.txt;} 2>/dev/null
 printf '%s' "$value"
 
-echo "ECHO"
+echo "ECHO 1"
 echo $value
+echo "ECHO 2"
+
 
 git config --local user.email "action@github.com"
 git config --local user.name "Github Action"
