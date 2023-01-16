@@ -63,6 +63,6 @@ async function main() {
 	/*
 	 * Log the CBV code to grab it in github actions
 	 */
-	console.log(new_cbv_code_name);
-	return new_cbv_code_name;
+	console.log(`[${new_cbv_code_name}]`);
+	return `[${new_cbv_code_name}]`;
 }

@@ -5,7 +5,7 @@ function prettify(form_object: CBV): string {
 
 ${form_object.short_description}
 
-### CBV:ID ${form_object.cbv_id}
+### CBV ID: ${form_object.cbv_id}
 ### Blockchain: ${form_object.blockchain}
 ### Version affected: ${form_object.version_affected}
 ### Component: ${form_object.component}
