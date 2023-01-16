@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-    
+
       - name: Setup deno
         uses: denoland/setup-deno@v1
         with:
@@ -20,11 +20,14 @@ jobs:
 
       - name: Deno run
         id: deno
+        
         run: |
-          deno run --allow-write --allow-read --allow-env --allow-net .github/scripts/mod.ts "${{ toJSON(github.event.issue.labels.*.name) }}" "${{ github.event.issue.body }}"  ${{ secrets.API_KEY_1 }} ${{ secrets.API_KEY_2 }} ${{ secrets.API_ENDPOINT }} > DENO_OUTPUT.txt
+          echo "COMMIT_NAME"=$(deno run --allow-write --allow-read --allow-env --allow-net .github/scripts/mod.ts \
+          "${{ toJSON(github.event.issue.labels.*.name) }}" "${{ github.event.issue.body }}" \
+          ${{ secrets.API_KEY_1 }} ${{ secrets.API_KEY_2 }} ${{ secrets.API_ENDPOINT }}) >> $GITHUB_ENV
     
       - name: Commit files
-        run: .github/scripts/commit.sh
+        run: .github/scripts/commit.sh ${{ env.COMMIT_NAME }}
       
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
