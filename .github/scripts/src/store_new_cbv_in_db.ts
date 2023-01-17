@@ -30,7 +30,8 @@ async function store_new_cbv_in_db(
       )
     }
 `;
-	console.log("attempt to save in db")
+	console.log("attempt to save in db with")
+	console.log({mutation})
 	try {
 		const response = await fetch(_api_endpoint, {
 			method: 'POST',
