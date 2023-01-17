@@ -48,7 +48,7 @@ async function store_new_cbv_in_db(
 	} catch (error) {
 		console.log(error);
 		// make GH action fail when CBV cannot be save in DB
-		Deno.exit(1);
+		Deno.exit(2);
 	}
 }
 
