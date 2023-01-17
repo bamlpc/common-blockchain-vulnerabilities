@@ -36,8 +36,9 @@ ${form_object.tests}
 
 ${form_object.aditional_comments}
 `;
-
+	console.log("prettify md")
 	return formated_cbv_as_md.replace(/_No response_/g, '-');
 }
 
 export { prettify };
+

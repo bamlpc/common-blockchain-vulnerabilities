@@ -30,6 +30,8 @@ function breakdown_form(
 		updated_at: '',
 		api_key: _api_key,
 	};
+	console.log("Created new form object");
+	console.log({form_object})
 	return form_object;
 }
 
@@ -40,3 +42,4 @@ function getCurrentDate() {
 }
 
 export { breakdown_form };
+
