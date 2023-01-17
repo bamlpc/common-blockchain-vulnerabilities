@@ -38,8 +38,8 @@ async function store_new_cbv_in_db(
 				'Accept': 'application/json',
 			},
 			body: JSON.stringify({ mutation }),
-		}).then((response) => JSON.stringify(response.json()));
-
+		}).then((resp) => JSON.stringify(resp.json()));
+		console.log(response)
 		if (response.match(/errors/)) {
 			throw new Error(response);
 		}
@@ -51,3 +51,4 @@ async function store_new_cbv_in_db(
 }
 
 export { store_new_cbv_in_db };
+

@@ -36,10 +36,29 @@ body:
       description: What blockchain is been affected by this vulnerability? Multiple selection is enable
       multiple: true
       options:
+        - Arbitrum
+        - Aurora
+        - Avalanche
         - Bitcoin
+        - BNB Chain
+        - Boba Network
+        - Celo
+        - Cronos
+        - Emerald
         - Ethereum
-        - Polkadot
+        - Evmos
+        - Fantom
+        - Fuse
+        - Gnosis Chain
+        - Harmony
+        - Heco
+        - Kava
+        - Metis
+        - Moonbean
+        - Moonriver
+        - Optimism
         - Phantasma
+        - Polkadot
         - Polygon
     validations:
       required: true
