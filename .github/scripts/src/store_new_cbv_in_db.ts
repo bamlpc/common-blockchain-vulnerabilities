@@ -8,24 +8,24 @@ async function store_new_cbv_in_db(
     mutation{
     	store_cbv(
         cbv: {
-    	  	title: "${_obj_data.title}"
-          short_description: "${_obj_data.short_description}"
-      		cbv_id: "${_obj_data.cbv_id}"
-    	  	blockchain: "${_obj_data.blockchain}"
-     			version_affected: "${_obj_data.version_affected}"
-      		component: "${_obj_data.component}"
-   		  	severity: "${_obj_data.severity}"
-     			vulnerability_type: "${_obj_data.vulnerability_type}"
-      		details: "${_obj_data.details}"
-    	  	recommendation: "${_obj_data.recommendation}"
-      		references: "${_obj_data.references}"
-      		labels: "${_obj_data.labels}"
-    	  	tests: "${_obj_data.tests}"
-          aditional_comments: "${_obj_data.aditional_comments}"
-          credits: "${_obj_data.credits}"
-          created_at: "${_obj_data.created_at}"
-          updated_at: "${_obj_data.updated_at}"
-          api_key: "${_obj_data.api_key}"
+    	  	title: ${JSON.stringify(_obj_data.title)}
+          short_description: ${JSON.stringify(_obj_data.short_description)}
+      		cbv_id: ${JSON.stringify(_obj_data.cbv_id)}
+    	  	blockchain: ${JSON.stringify(_obj_data.blockchain)}
+     			version_affected: ${JSON.stringify(_obj_data.version_affected)}
+      		component: ${JSON.stringify(_obj_data.component)}
+   		  	severity: ${JSON.stringify(_obj_data.severity)}
+     			vulnerability_type: ${JSON.stringify(_obj_data.vulnerability_type)}
+      		details: ${JSON.stringify(_obj_data.details)}
+    	  	recommendation: ${JSON.stringify(_obj_data.recommendation)}
+      		references: ${JSON.stringify(_obj_data.references)}
+      		labels: ${JSON.stringify(_obj_data.labels)}
+    	  	tests: ${JSON.stringify(_obj_data.tests)}
+          aditional_comments: ${JSON.stringify(_obj_data.aditional_comments)}
+          credits: ${JSON.stringify(_obj_data.credits)}
+          created_at: ${JSON.stringify(_obj_data.created_at)}
+          updated_at: ${JSON.stringify(_obj_data.updated_at)}
+          api_key: ${JSON.stringify(_obj_data.api_key)}
 		    }
       )
     }
@@ -33,13 +33,15 @@ async function store_new_cbv_in_db(
 	console.log("attempt to save in db with")
 
 	try {
-		const response = await fetch(_api_endpoint, {
+		const _fetch = await fetch(_api_endpoint, {
       method: 'POST',
       mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ mutation }),
-		}).then((resp) => JSON.stringify(resp.json()));
-		console.log({response})
+		});
+    const data = await _fetch.json()
+    const response = JSON.stringify(data)
+    console.log(response);
 		if (response.match(/errors/)) {
 			throw new Error(response);
 		}
@@ -51,4 +53,3 @@ async function store_new_cbv_in_db(
 }
 
 export { store_new_cbv_in_db };
-
