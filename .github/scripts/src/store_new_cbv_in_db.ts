@@ -35,6 +35,7 @@ async function store_new_cbv_in_db(
 	try {
 		const response = await fetch(_api_endpoint, {
 			method: 'POST',
+			mode: 'cors',
 			headers: {
 				'Content-Type': 'application/json',
 				'Accept': 'application/json',
