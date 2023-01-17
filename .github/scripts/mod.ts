@@ -26,8 +26,7 @@ async function main() {
 		Deno.exit(0);
 	}
 	// BODY
-	const issue_body = data_given_by_gh[1];
-	const raw_form_data = issue_body;
+	const raw_form_data = JSON.stringify(data_given_by_gh[1]);
 
 	// KEYS
 	const keyStack = new KeyStack([data_given_by_gh[2]]);
