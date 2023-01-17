@@ -38,8 +38,9 @@ body:
       options:
         - Bitcoin
         - Ethereum
-        - Polygon
         - Polkadot
+        - Phantasma
+        - Polygon
     validations:
       required: true
   # version_affected
