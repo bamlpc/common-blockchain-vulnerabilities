@@ -35,14 +35,13 @@ async function store_new_cbv_in_db(
 	try {
 		const response = await fetch(_api_endpoint, {
 			method: 'POST',
-			mode: 'cors',
+			//mode: 'cors',
 			headers: {
 				'Content-Type': 'application/json',
 				'Accept': 'application/json',
 			},
 			body: JSON.stringify({ mutation }),
 		}).then((resp) => JSON.stringify(resp.json()));
-		console.log({response})
 		if (response.match(/errors/)) {
 			throw new Error(response);
 		}
