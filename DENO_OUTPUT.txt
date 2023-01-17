@@ -3,7 +3,7 @@ Created new form object
   form_object: {
     title: "Missing check for duplicate inputs",
     short_description: "A vulnerability was found in Bitcoin Core and Bitcoin Knots up to 0.14.2/0.15.1/0.16.2. It has been ...",
-    cbv_id: "CBV-23-00011",
+    cbv_id: "CBV-23-00001",
     blockchain: "Bitcoin",
     version_affected: "Bitcoin Core 0.14.x before 0.14.3, 0.15.x before 0.15.2, and 0.16.x before 0.16.3 and Bitcoin Knots ...",
     component: "Consensus Mechanism",
@@ -25,9 +25,5 @@ prettify md
 save md files in issues folder
 { get_subfolders: [ "Bitcoin" ] }
 attempt to save in db with
-{
-  mutation: '\n    mutation{\n    \tstore_cbv(\n        cbv: {\n    \t  \ttitle: "Missing check for duplicate inputs"\n  ...'
-}
-{}
->CBV-23-00011<
+>CBV-23-00001<
 end of script
