@@ -11,7 +11,7 @@ async function main() {
 	const data_given_by_gh: Array<string> = Deno.args;
 	/*
 	 * First argument is going to be an array containing the labels
-	 * Second argument is going to be an object containing the new CBV to be added
+	 * Second argument is going to be the gh tocken
 	 * Third argument is the API v1 GraphQL endpoint to store the CBV
 	 * Forth argument is going to be the first Key to validate the store endpoint
 	 * Fifth argument is going to be the second Key to validate the store endpoint
@@ -25,8 +25,28 @@ async function main() {
 		console.log(data_given_by_gh);
 		Deno.exit(0);
 	}
+
+	//FETCH
+	const response = await fetch('https://api.github.com/graphql', {
+      method: 'POST',
+      mode: 'cors',
+      headers: { 'Content-Type': 'application/json' , 'Authorization': `Bearer ${data_given_by_gh[0]}`},
+      body: JSON.stringify({
+        query: `query{
+          repository(owner: "bamlpc", name: "common-blockchain-vulnerabilities") {
+            closed: issues(states: CLOSED, labels: "Accepted", last: 1) {
+              nodes {
+                body
+              }
+            }
+          }
+        }`
+      })
+    })
+const json = await response.json();
+
 	// BODY
-	const raw_form_data = data_given_by_gh[1];
+	const raw_form_data = json.data.repository.closed.nodes[0].body;
 
 	// KEYS
 	const keyStack = new KeyStack([data_given_by_gh[2]]);
