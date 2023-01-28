@@ -21,8 +21,6 @@ async function store_new_cbv_in_folder(
 			_cbv_ready_to_be_stored,
 		);
 	}
-	console.log("save md files in issues folder")
-	console.log({get_subfolders})
 }
 
 export { store_new_cbv_in_folder };
