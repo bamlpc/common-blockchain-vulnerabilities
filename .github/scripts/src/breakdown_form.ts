@@ -9,6 +9,8 @@ function breakdown_form(
 ): CBV {
 	const now = getCurrentDate();
 
+	console.log("ISSUE FORM", issue_form)
+
 	const _title = issue_form.slice(issue_form.indexOf('### Title'), issue_form.indexOf('### Short description'));
 	const _short_description = issue_form.slice(issue_form.indexOf('### Short description'), issue_form.indexOf('### Blockchain'));
 	const _blockchain = issue_form.slice(issue_form.indexOf('### Blockchain'), issue_form.indexOf('### Version affected'));
