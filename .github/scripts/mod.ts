@@ -15,6 +15,7 @@ async function main() {
 	 * Third argument is the API v1 GraphQL endpoint to store the CBV
 	 * Forth argument is going to be the first Key to validate the store endpoint
 	 * Fifth argument is going to be the second Key to validate the store endpoint
+	 * Six argument is going to be the issue number
 	 */
 
 	// LABELS
@@ -27,6 +28,7 @@ async function main() {
 	}
 
 	//FETCH
+	const issue_number = Number(data_given_by_gh[5])
 	const response = await fetch('https://api.github.com/graphql', {
 		method: 'POST',
 		mode: 'cors',
@@ -36,20 +38,18 @@ async function main() {
 		},
 		body: JSON.stringify({
 			query: `query{
-          repository(owner: "bamlpc", name: "common-blockchain-vulnerabilities") {
-            closed: issues(states: CLOSED, labels: "Accepted", last: 1) {
-              nodes {
-                body
-              }
-            }
-          }
-        }`,
+				repository(owner: "bamlpc", name: "common-blockchain-vulnerabilities") {
+					issue(number: ${issue_number}) {
+						body
+					}
+				}
+			}`,
 		}),
 	});
 	const json = await response.json();
 
 	// BODY
-	const raw_form_data = json.data.repository.closed.nodes[0].body;
+	const raw_form_data = json.data.repository.issue.body;
 
 	// KEYS
 	const keyStack = new KeyStack([data_given_by_gh[2]]);
