@@ -8,24 +8,38 @@ function breakdown_form(
 	_api_key: string,
 ): CBV {
 	const now = getCurrentDate();
-	const split = issue_form.split('###');
+
+	const _title = issue_form.slice(issue_form.indexOf('### Title'), issue_form.indexOf('### Short description'));
+	const _short_description = issue_form.slice(issue_form.indexOf('### Short description'), issue_form.indexOf('### Blockchain'));
+	const _blockchain = issue_form.slice(issue_form.indexOf('### Blockchain'), issue_form.indexOf('### Version affected'));
+	const _version_affected = issue_form.slice(issue_form.indexOf('### Version affected'), issue_form.indexOf('### Component'));
+	const _component = issue_form.slice(issue_form.indexOf('### Component'), issue_form.indexOf('### Severity'));
+	const _severity = issue_form.slice(issue_form.indexOf('### Severity'), issue_form.indexOf('### Vulnerability Type'));
+	const _vulnerability_type = issue_form.slice(issue_form.indexOf('### Vulnerability Type'), issue_form.indexOf('### Details'));
+	const _details = issue_form.slice(issue_form.indexOf('### Details'), issue_form.indexOf('### Recommendation'));
+	const _recommendation = issue_form.slice(issue_form.indexOf('### Recommendation'), issue_form.indexOf('### References'));
+	const _references = issue_form.slice(issue_form.indexOf('### References'), issue_form.indexOf('### Labels'));
+	const _labels = issue_form.slice(issue_form.indexOf('### Labels'), issue_form.indexOf('### Test'));
+	const _tests = issue_form.slice(issue_form.indexOf('### Test'), issue_form.indexOf('### Aditional comments'));
+	const _aditional_comments = issue_form.slice(issue_form.indexOf('### Aditional comments'), issue_form.indexOf('### Credit to'));
+	const _credits = issue_form.slice(issue_form.indexOf('### Credit to'), issue_form.indexOf('### Code of Conduct'));
 
 	const form_object = {
-		title: split[1].replace(/Title/, '').trim(),
-		short_description: split[2].replace(/Short description/, '').trim(),
+		title: _title.replace(/### Title/, '').trim(),
+		short_description: _short_description.replace(/### Short description/, '').trim(),
 		cbv_id: new_cbv_code_name,
-		blockchain: split[3].replace(/Blockchain/, '').trim(),
-		version_affected: split[4].replace(/Version affected/, '').trim(),
-		component: split[5].replace(/Component/, '').trim(),
-		severity: split[6].replace(/Severity/, '').trim(),
-		vulnerability_type: split[7].replace(/Vulnerability Type/, '').trim(),
-		details: split[8].replace(/Details/, '').trim(),
-		recommendation: split[9].replace(/Recommendation/, '').trim(),
-		references: split[10].replace(/References/, '').trim(),
-		labels: split[11].replace(/Labels/, '').trim(),
-		tests: split[12].replace(/Test/, '').trim(),
-		aditional_comments: split[13].replace(/Aditional comments/, '').trim(),
-		credits: split[14].replace(/Credit to/, '').trim(),
+		blockchain: _blockchain.replace(/### Blockchain/, '').trim(),
+		version_affected: _version_affected.replace(/### Version affected/, '').trim(),
+		component: _component.replace(/### Component/, '').trim(),
+		severity: _severity.replace(/### Severity/, '').trim(),
+		vulnerability_type: _vulnerability_type.replace(/### Vulnerability Type/, '').trim(),
+		details: _details.replace(/### Details/, '').trim(),
+		recommendation: _recommendation.replace(/### Recommendation/, '').trim(),
+		references: _references.replace(/### References/, '').trim(),
+		labels: _labels.replace(/### Labels/, '').trim(),
+		tests: _tests.replace(/### Test/, '').trim(),
+		aditional_comments: _aditional_comments.replace(/### Aditional comments/, '').trim(),
+		credits: _credits.replace(/### Credit to/, '').trim(),
 		created_at: now,
 		updated_at: '',
 		api_key: _api_key,
