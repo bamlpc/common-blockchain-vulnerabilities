@@ -30,7 +30,7 @@ async function main() {
 	const response = await fetch('https://api.github.com/graphql', {
       method: 'POST',
       mode: 'cors',
-      headers: { 'Content-Type': 'application/json' , 'Authorization': `Bearer ${data_given_by_gh[0]}`},
+      headers: { 'Content-Type': 'application/json' , 'Authorization': `Bearer ${data_given_by_gh[1]}`},
       body: JSON.stringify({
         query: `query{
           repository(owner: "bamlpc", name: "common-blockchain-vulnerabilities") {
