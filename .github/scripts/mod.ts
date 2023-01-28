@@ -28,11 +28,14 @@ async function main() {
 
 	//FETCH
 	const response = await fetch('https://api.github.com/graphql', {
-      method: 'POST',
-      mode: 'cors',
-      headers: { 'Content-Type': 'application/json' , 'Authorization': `Bearer ${data_given_by_gh[1]}`},
-      body: JSON.stringify({
-        query: `query{
+		method: 'POST',
+		mode: 'cors',
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${data_given_by_gh[1]}`,
+		},
+		body: JSON.stringify({
+			query: `query{
           repository(owner: "bamlpc", name: "common-blockchain-vulnerabilities") {
             closed: issues(states: CLOSED, labels: "Accepted", last: 1) {
               nodes {
@@ -40,10 +43,10 @@ async function main() {
               }
             }
           }
-        }`
-      })
-    })
-const json = await response.json();
+        }`,
+		}),
+	});
+	const json = await response.json();
 
 	// BODY
 	const raw_form_data = json.data.repository.closed.nodes[0].body;
@@ -83,6 +86,6 @@ const json = await response.json();
 	 * Log the CBV code to grab it in github actions
 	 */
 	console.log(`>${new_cbv_code_name}<`);
-	console.log("end of script")
+	console.log('end of script');
 	return new_cbv_code_name;
 }

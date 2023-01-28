@@ -40,4 +40,3 @@ ${form_object.aditional_comments}
 }
 
 export { prettify };
-

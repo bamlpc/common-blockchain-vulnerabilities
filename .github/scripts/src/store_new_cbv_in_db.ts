@@ -30,18 +30,18 @@ async function store_new_cbv_in_db(
       )
     }
 `;
-	console.log("attempt to save in db with")
+	console.log('attempt to save in db with');
 
 	try {
 		const _fetch = await fetch(_api_endpoint, {
-      method: 'POST',
-      mode: 'cors',
-      headers: { 'Content-Type': 'application/json' },
+			method: 'POST',
+			mode: 'cors',
+			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ mutation }),
 		});
-    const data = await _fetch.json()
-    const response = JSON.stringify(data)
-    console.log(response);
+		const data = await _fetch.json();
+		const response = JSON.stringify(data);
+		console.log(response);
 		if (response.match(/errors/)) {
 			throw new Error(response);
 		}

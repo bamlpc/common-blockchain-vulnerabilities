@@ -24,4 +24,3 @@ async function store_new_cbv_in_folder(
 }
 
 export { store_new_cbv_in_folder };
-
