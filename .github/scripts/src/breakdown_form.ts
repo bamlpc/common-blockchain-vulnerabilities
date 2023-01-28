@@ -9,8 +9,6 @@ function breakdown_form(
 ): CBV {
 	const now = getCurrentDate();
 
-	console.log("ISSUE FORM", issue_form)
-
 	const _title = issue_form.slice(issue_form.indexOf('### Title'), issue_form.indexOf('### Short description'));
 	const _short_description = issue_form.slice(issue_form.indexOf('### Short description'), issue_form.indexOf('### Blockchain'));
 	const _blockchain = issue_form.slice(issue_form.indexOf('### Blockchain'), issue_form.indexOf('### Version affected'));
@@ -37,10 +35,10 @@ function breakdown_form(
 		vulnerability_type: _vulnerability_type.replace(/### Vulnerability Type/, '').trim(),
 		details: _details.replace(/### Details/, '').trim(),
 		recommendation: _recommendation.replace(/### Recommendation/, '').trim(),
-		references: _references.replace(/### References/, '').trim(),
-		labels: _labels.replace(/### Labels/, '').trim(),
-		tests: _tests.replace(/### Test/, '').trim(),
-		aditional_comments: _aditional_comments.replace(/### Aditional comments/, '').trim(),
+		references: _references.replace(/### References/, '').replace(/_No response_/, '').trim(),
+		labels: _labels.replace(/### Labels/, '').replace(/_No response_/, '').trim(),
+		tests: _tests.replace(/### Test/, '').replace(/_No response_/, '').trim(),
+		aditional_comments: _aditional_comments.replace(/### Aditional comments/, '').replace(/_No response_/, '').trim(),
 		credits: _credits.replace(/### Credit to/, '').trim(),
 		created_at: now,
 		updated_at: '',
